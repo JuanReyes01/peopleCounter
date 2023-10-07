@@ -1,7 +1,6 @@
 # import libraries
 import numpy as np
 import cv2
-import GetHumanPosition as ghp
 
 #Model obtained from:
 #https://github.com/djmv/MobilNet_SSD_opencv
@@ -17,7 +16,7 @@ net = cv2.dnn.readNetFromCaffe(prototxt, caffe_model)
 # dictionary with the object class id and names on which the model is trained
 classNames = { 0: 'background', 15: 'person'}
 # capture the webcam feed
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 totA = 0
 totB = 0
