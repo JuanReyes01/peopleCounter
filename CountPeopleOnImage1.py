@@ -31,7 +31,7 @@ while True:
     blob = cv2.dnn.blobFromImage(frame, scalefactor = 1/127.5, size = (300, 300), mean = (127.5, 127.5, 127.5), swapRB=True, crop=False)
     # blob object is passed as input to the object
     net.setInput(blob)
-    # network prediction
+    # network prediction=
     detections = net.forward()
 
     x = 639
@@ -47,7 +47,7 @@ while True:
         # confidence of prediction
         confidence = detections[0, 0, i, 2]
         # set confidence level threshold to filter weak predictions
-        if confidence > 0.5:
+        if confidence > 0.2:
             # get class id
             class_id = int(detections[0, 0, i, 1])
 
