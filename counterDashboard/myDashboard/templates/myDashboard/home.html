@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PeopleCounter</title>
+    <!-- Include necessary JavaScript and CSS libraries for the graph -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #image-container,
+        #graph-container {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #graph {
+            height: 485px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dashboard</h1>
+    
+    <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <input type="submit" value="Medir">
+    </form>
+
+    <!-- Container for the image -->
+    <div id="image-container">
+        <!-- Render the image -->
+        <img id="dynamicImage" src="{% static 'image.png' %}" alt="Default Image">
+    </div>
+
+    <!-- Container for the graph -->
+    <div id="graph-container">
+        <!-- Plot the graph -->
+        <div id="graph"></div>
+    </div>
+
+    <script>
+        // Function to change the image source
+        function changeImage() {
+            var img = document.getElementById('dynamicImage');
+            img.src = '{% static 'image.png' %}';  // Replace with the path to your updated image
+        }
+
+        var dates = [{% for press in button_presses %}new Date("{{ press.press_date|date:'Y-m-d H:i:s' }}"), {% endfor %}];
+        var numbers = [{% for press in button_presses %}{{ press.result_number }}, {% endfor %}];
+
+        var data = [{
+            x: dates,
+            y: numbers,
+            mode: 'lines+markers',
+            type: 'scatter'
+        }];
+
+        var layout = {
+            title: 'Cantidad de personas vs fecha',
+            xaxis: {
+                title: 'Fecha',
+                type: 'date'
+            },
+            yaxis: {
+                title: 'Cantidad de personas'
+            }
+        };
+        Plotly.newPlot('graph', data, layout);
+        changeImage();
+    </script>
+</body>
+</html>
